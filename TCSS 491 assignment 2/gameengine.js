@@ -14,6 +14,8 @@ function GameEngine() {
     this.ctx = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
+	this.mouseCurrentX = -500;
+	this.mouseCurrentY = -500;
 }
 
 GameEngine.prototype.init = function (ctx) {
@@ -25,9 +27,12 @@ GameEngine.prototype.init = function (ctx) {
 }
 
 GameEngine.prototype.initControls = function () {
-    this.ctx.canvas.addEventListener("keydown", function (e) {
+	var that = this;
+    this.ctx.canvas.addEventListener("mousemove", function (e) {
         e.preventDefault();
-	    console.log(e);
+	    that.mouseCurrentX = e.layerX;
+		that.mouseCurrentY = e.layerY;
+		//console.log(this.mouseCurrentX);
 	});
 }
 

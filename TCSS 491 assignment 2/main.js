@@ -1,6 +1,6 @@
 var AM = new AssetManager();
 
-var FLOOR = 50;
+var FLOOR = 490;
 
 function Animation(spriteSheet, frameWidth, frameHeight, frameDuration, frames, rowOffset, columnOffset, loop, reverse) {
     this.spriteSheet = spriteSheet;
@@ -48,9 +48,21 @@ Animation.prototype.isDone = function () {
     return this.done;
 }
 
+function Background(ctx) {
+	this.img = AM.getAsset("./img/super_mario_background.jpg");
+	this.ctx = ctx;
+}
 
+Background.prototype.draw = function() {
+	this.ctx.drawImage(this.img, 0, 0);
+}
+
+Background.prototype.update = function() {
+	//do nothing, your a background
+}
 
 AM.queueDownload("./img/sprite-sheet-mario.png");
+AM.queueDownload("./img/super_mario_background.jpg");
 
 AM.downloadAll(function () {
     var canvas = document.getElementById("gameWorld");
@@ -59,10 +71,11 @@ AM.downloadAll(function () {
 
     var gameEngine = new GameEngine();
     gameEngine.init(ctx);
-    //gameEngine.initControls();
+    gameEngine.initControls();
     gameEngine.start();
-    gameEngine.addEntity(new mario(gameEngine));
-    
+	gameEngine.addEntity(new Background(ctx));
+	gameEngine.addEntity(new mario(gameEngine));
+    gameEngine.addEntity(new terrainObject());
 
     console.log("All Done!");
 });
