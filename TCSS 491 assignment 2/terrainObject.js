@@ -1,19 +1,10 @@
-function terrainObject() {
+function terrainObject(top, bottom, left, right) {
 	this.solid = true;
-	this.top = 412;
-	this.right = 373;
-	this.bottom = 440;
-	this.left = 239;
-	
-}
-
-terrainObject.prototype.canPass = function(sourceX, sourceY, destX, destY, width, height) {
-	if (destX > this.left - width && destX < this.right	&& 
-		destY < this.bottom + height && destY > this.top) {
-		return false;
-	} else {
-		return true;
-	}
+	this.top = top;
+	this.right = right;
+	this.bottom = bottom;
+	this.left = left;
+	this.dead = false;
 }
 
 terrainObject.prototype.update = function() {

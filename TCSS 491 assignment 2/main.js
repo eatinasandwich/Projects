@@ -1,6 +1,6 @@
 var AM = new AssetManager();
-
-var FLOOR = 490;
+var MARIO_COUNT = 10;
+var FLOOR = 80;
 
 function Animation(spriteSheet, frameWidth, frameHeight, frameDuration, frames, rowOffset, columnOffset, loop, reverse) {
     this.spriteSheet = spriteSheet;
@@ -14,30 +14,27 @@ function Animation(spriteSheet, frameWidth, frameHeight, frameDuration, frames, 
     this.reverse = reverse;
     this.rowOffset = rowOffset;
     this.columnOffset = columnOffset;
-    this.done = false;
 }
 
 Animation.prototype.drawFrame = function (tick, ctx, x, y) {
     this.elapsedTime += tick;
+    var frame = -1;
     if (this.isDone()) {
         if (this.loop) this.elapsedTime = 0;
+        else frame = this.frames - 1;
     }
-    var frame = this.currentFrame();
-    
+    if (frame === -1) {
+        var frame = this.currentFrame();
+    }
     var xindex = frame % 10 + this.columnOffset;
-    var yindex = Math.floor(frame / 10) + this.rowOffset;
-
-    var sx = xindex * 40;
-    var sy = yindex * 40;
-    ctx.drawImage(this.spriteSheet, //image
-                 sx, sy,  // source location
-                 this.frameWidth, this.frameHeight, //source dim
-                 x, y, // destination location
-                 this.frameWidth, // destination dim
-                 this.frameHeight);
-    if (frame === this.frames) {
-        this.done = true;
-    }
+    var yindex = this.rowOffset;
+	
+	ctx.drawImage(this.spriteSheet,
+                    xindex * this.frameWidth, yindex * this.frameHeight,
+                    this.frameWidth, this.frameHeight,
+                    x, y,
+                    this.frameWidth,
+                    this.frameHeight);
 }
 
 Animation.prototype.currentFrame = function () {
@@ -45,7 +42,7 @@ Animation.prototype.currentFrame = function () {
 }
 
 Animation.prototype.isDone = function () {
-    return this.done;
+    return (this.elapsedTime >= this.totalTime);
 }
 
 function Background(ctx) {
@@ -67,17 +64,30 @@ AM.queueDownload("./img/super_mario_background.jpg");
 AM.downloadAll(function () {
     var canvas = document.getElementById("gameWorld");
     var ctx = canvas.getContext("2d");
-
+	var marioButton = document.getElementById("mariosButton");
+	var numMariosField = document.getElementById("numMarios");
 
     var gameEngine = new GameEngine();
     gameEngine.init(ctx);
     gameEngine.initControls();
     gameEngine.start();
 	gameEngine.addEntity(new Background(ctx));
-	gameEngine.addEntity(new mario(gameEngine));
-    gameEngine.addEntity(new terrainObject());
-
-    console.log("All Done!");
+    gameEngine.addEntity(new terrainObject(296, 267, 293, 319));//top block
+	gameEngine.addEntity(new terrainObject(187, 160, 239, 373));//platform
+	gameEngine.addEntity(new terrainObject(187, 160, 133, 159));//left block
+	gameEngine.addEntity(new terrainObject(134, 0, 453, 506));//left pipe
+	gameEngine.addEntity(new terrainObject(160, 0, 720, 773));//right pipe
+	
+	marioButton.addEventListener("click", function(e) {
+		e.preventDefault();
+		for (var i = 0; i < numMariosField.value; i++) {
+			var x = Math.floor(Math.random() * 800);
+			var direction = Math.floor(Math.random() * 1.999);
+			var terminalVelocity = -(8 + 2 * Math.random());
+			gameEngine.addEntity(new mario(gameEngine, x, 80, direction, terminalVelocity));		
+		}
+	}, false);
+	
 });
 
 

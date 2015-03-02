@@ -16,6 +16,8 @@ function GameEngine() {
     this.surfaceHeight = null;
 	this.mouseCurrentX = -500;
 	this.mouseCurrentY = -500;
+	this.debug = false;
+	//this.stopped = true;
 }
 
 GameEngine.prototype.init = function (ctx) {
@@ -34,6 +36,18 @@ GameEngine.prototype.initControls = function () {
 		that.mouseCurrentY = e.layerY;
 		//console.log(this.mouseCurrentX);
 	});
+	
+	//var start = document.getElementById("startButton");
+	//var stop = document.getElementById("stopButton");
+	//var that = this;
+	//start.addEventListener("click", function(e) {
+	//	e.preventDefault();
+	//	that.stopped = false;
+	//}, false);
+	//stop.addEventListener("click", function(e) {
+	//	e.preventDefault();
+	//	that.stopped = true;
+	//}, false);
 }
 
 GameEngine.prototype.start = function () {
@@ -55,24 +69,46 @@ GameEngine.prototype.draw = function () {
     this.ctx.save();
     for (var i = 0; i < this.entities.length; i++) {
         this.entities[i].draw(this.ctx);
+		if (this.entities[i].constructor === terrainObject && this.debug) {
+			var entity = this.entities[i];
+			this.ctx.beginPath();
+			this.ctx.moveTo(entity.left - 20, 600 - entity.bottom);
+			this.ctx.lineTo(entity.right + 20, 600 - entity.bottom);
+			this.ctx.stroke();
+			this.ctx.beginPath();
+			this.ctx.moveTo(entity.left - 20, 600 - entity.top);
+			this.ctx.lineTo(entity.right + 20, 600 - entity.top);
+			this.ctx.stroke();
+		}
     }
     this.ctx.restore();
 }
 
 GameEngine.prototype.update = function () {
     var entitiesCount = this.entities.length;
-
     for (var i = 0; i < entitiesCount; i++) {
         var entity = this.entities[i];
-
-        entity.update();
+		entity.update();
+    }
+	
+	for (var i = 0; i < entitiesCount; i++) {
+        var entity = this.entities[i];
+		if(entity.constructor === mario) {
+			if (entity.dead) {
+				this.entities.splice(i, 1);
+				entitiesCount--;
+			}
+		}
     }
 }
 
 GameEngine.prototype.loop = function () {
-    this.clockTick = this.timer.tick();
-    this.update();
-    this.draw();
+	if (!this.stopped) {
+		this.clockTick = this.timer.tick();
+		this.update();
+		this.draw();
+	}
+	
 }
 
 function Timer() {
