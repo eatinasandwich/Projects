@@ -4,9 +4,9 @@ var LEFT = 6;
 var RIGHT = 21;
 
 function mario(game, initX, initY, initDirection, terminalVelocity) {
-	this.x = 440;
+	//this.x = 440;
 	this.x = initX;
-	this.y = 80;
+	//this.y = 80;
 	this.y = initY;
 	this.width = 40;
 	this.height = 28;

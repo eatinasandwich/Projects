@@ -37,17 +37,17 @@ GameEngine.prototype.initControls = function () {
 		//console.log(this.mouseCurrentX);
 	});
 	
-	//var start = document.getElementById("startButton");
-	//var stop = document.getElementById("stopButton");
-	//var that = this;
-	//start.addEventListener("click", function(e) {
-	//	e.preventDefault();
-	//	that.stopped = false;
-	//}, false);
-	//stop.addEventListener("click", function(e) {
-	//	e.preventDefault();
-	//	that.stopped = true;
-	//}, false);
+	var start = document.getElementById("start");
+	var stop = document.getElementById("stop");
+	var that = this;
+	start.addEventListener("click", function(e) {
+		e.preventDefault();
+		that.stopped = false;
+	}, false);
+	stop.addEventListener("click", function(e) {
+		e.preventDefault();
+		that.stopped = true;
+	}, false);
 }
 
 GameEngine.prototype.start = function () {
