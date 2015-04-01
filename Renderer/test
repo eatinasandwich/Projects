@@ -1,0 +1,11 @@
+DIM 512 512
+RGB 0 0 0
+LOAD_IDENTITY_MATRIX
+RGB 0 1 0
+LINE 0 -.5 .5 0 .5 .5
+LINE .01 -.5 .5 .01 .5 .5
+LINE -.01 -.5 .5 -.01 .5 .5
+RGB 0 0 0
+LINE -.75 0 0 .75 0 0
+RGB 1 0 0
+LINE -.5 -.5 -.5 -.5 .5 -.5
